@@ -3,39 +3,38 @@ package browser;
 import org.openqa.selenium.edge.EdgeDriverService;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class EdgeBrowser implements Browser {
 
     private RemoteWebDriver remoteWebDriver;
     private EdgeDriverService edgeDriverService;
-    private Logger logger = Logger.getLogger(this.getClass().getName());
+    private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public EdgeBrowser() {
         setDriver();
     }
 
-    private EdgeDriverService buildEdgeDriverService() {
+    private void buildEdgeDriverService() {
         if (null == edgeDriverService) {
-            logger.log(Level.INFO, "Building EdgeDriver service ...");
+            LOGGER.info("Building EdgeDriver service ...");
             edgeDriverService = new EdgeDriverService.Builder()
                     .usingAnyFreePort()
                     .usingDriverExecutable(new File("src/test/resources/MicrosoftWebDriver.exe"))
                     .build();
         } else {
-            logger.log(Level.INFO, "EdgeDriver service already set!");
+            LOGGER.info("EdgeDriver service already set!");
         }
-        return edgeDriverService;
     }
 
     private void startEdgeDriverService() {
-        if (null != edgeDriverService || !edgeDriverService.isRunning()) {
+        if (null != edgeDriverService && !edgeDriverService.isRunning()) {
             try {
-                logger.log(Level.INFO, "Starting EdgeDriver service ...");
+                LOGGER.info("Starting EdgeDriver service ...");
                 edgeDriverService.start();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -45,7 +44,7 @@ public class EdgeBrowser implements Browser {
 
     public void setDriver() {
         if (null == edgeDriverService) {
-            logger.log(Level.INFO, "RemoteWebDriver not set yet, I'll build and start it for you.");
+            LOGGER.info("RemoteWebDriver not set yet, I'll build and start it for you.");
             buildEdgeDriverService();
             startEdgeDriverService();
         }
@@ -65,7 +64,7 @@ public class EdgeBrowser implements Browser {
         if (null != remoteWebDriver) {
             remoteWebDriver.quit();
         }
-        if (null != edgeDriverService || edgeDriverService.isRunning()) {
+        if (null != edgeDriverService && edgeDriverService.isRunning()) {
             edgeDriverService.stop();
         }
     }

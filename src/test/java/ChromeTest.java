@@ -2,7 +2,10 @@ import browser.ChromeBrowser;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.By;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class ChromeTest {
 
@@ -16,8 +19,10 @@ public class ChromeTest {
     }
 
     @Test
-    public void test() {
-        driver.get("http://www.vdab.be");
+    public void chromeTest() {
+        driver.get("http://www.tweakers.net");
+        driver.findElement(By.linkText("Pricewatch")).click();
+        new WebDriverWait(driver, 15).until(ExpectedConditions.titleIs("Pricewatch - Vergelijk elektronicaprijzen"));
     }
 
     @After

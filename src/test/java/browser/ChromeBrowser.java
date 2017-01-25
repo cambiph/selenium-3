@@ -3,39 +3,39 @@ package browser;
 import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class ChromeBrowser implements Browser {
 
     private RemoteWebDriver remoteWebDriver;
     private ChromeDriverService chromeDriverService;
-    private Logger logger = Logger.getLogger(this.getClass().getName());
+    private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public ChromeBrowser() {
         setDriver();
     }
 
-    private ChromeDriverService buildChromeDriverService() {
+    private void buildChromeDriverService() {
         if (null == chromeDriverService) {
-            logger.log(Level.INFO, "Building ChromeDriver service ...");
+            LOGGER.info("Building ChromeDriver service ...");
             chromeDriverService = new ChromeDriverService.Builder()
                     .usingAnyFreePort()
                     .usingDriverExecutable(new File("src/test/resources/chromedriver.exe"))
                     .build();
         } else {
-            logger.log(Level.INFO, "ChromeDriver service already set!");
+            LOGGER.info("ChromeDriver service already set!");
         }
-        return chromeDriverService;
     }
 
     private void startChromeDriverService() {
-        if (null != chromeDriverService || !chromeDriverService.isRunning()) {
+        if (null != chromeDriverService && !chromeDriverService.isRunning()) {
             try {
-                logger.log(Level.INFO, "Starting ChromeDriver service ...");
+                LOGGER.info("Starting ChromeDriver service ...");
                 chromeDriverService.start();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -45,7 +45,7 @@ public class ChromeBrowser implements Browser {
 
     public void setDriver() {
         if (null == chromeDriverService) {
-            logger.log(Level.INFO, "RemoteWebDriver not set yet, I'll build and start it for you.");
+            LOGGER.info("RemoteWebDriver not set yet, I'll build and start it for you.");
             buildChromeDriverService();
             startChromeDriverService();
         }
@@ -65,7 +65,7 @@ public class ChromeBrowser implements Browser {
         if (null != remoteWebDriver) {
             remoteWebDriver.quit();
         }
-        if (null != chromeDriverService || chromeDriverService.isRunning()) {
+        if (null != chromeDriverService && chromeDriverService.isRunning()) {
             chromeDriverService.stop();
         }
     }
