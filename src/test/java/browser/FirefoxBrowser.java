@@ -3,39 +3,38 @@ package browser;
 import org.openqa.selenium.firefox.GeckoDriverService;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class FirefoxBrowser implements Browser {
 
     private RemoteWebDriver remoteWebDriver;
     private GeckoDriverService geckoDriverService;
-    private Logger logger = Logger.getLogger(this.getClass().getName());
+    private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public FirefoxBrowser() {
         setDriver();
     }
 
-    private GeckoDriverService buildGeckoDriverService() {
+    private void buildGeckoDriverService() {
         if (null == geckoDriverService) {
-            logger.log(Level.INFO, "Building GeckoDriver service ...");
+            LOGGER.info("Building GeckoDriver service ...");
             geckoDriverService = new GeckoDriverService.Builder()
                     .usingAnyFreePort()
                     .usingDriverExecutable(new File("src/test/resources/geckodriver.exe"))
                     .build();
         } else {
-            logger.log(Level.INFO, "GeckoDriver service already set!");
+            LOGGER.info("GeckoDriver service already set!");
         }
-        return geckoDriverService;
     }
 
     private void startGeckoDriverService() {
-        if (null != geckoDriverService || !geckoDriverService.isRunning()) {
+        if (null != geckoDriverService && !geckoDriverService.isRunning()) {
             try {
-                logger.log(Level.INFO, "Starting GeckoDriver service ...");
+                LOGGER.info("Starting GeckoDriver service ...");
                 geckoDriverService.start();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -45,7 +44,7 @@ public class FirefoxBrowser implements Browser {
 
     public void setDriver() {
         if (null == geckoDriverService) {
-            logger.log(Level.INFO, "RemoteWebDriver not set yet, I'll build and start it for you.");
+            LOGGER.info("RemoteWebDriver not set yet, I'll build and start it for you.");
             buildGeckoDriverService();
             startGeckoDriverService();
         }
@@ -65,7 +64,7 @@ public class FirefoxBrowser implements Browser {
         if (null != remoteWebDriver) {
             remoteWebDriver.quit();
         }
-        if (null != geckoDriverService || geckoDriverService.isRunning()) {
+        if (null != geckoDriverService && geckoDriverService.isRunning()) {
             geckoDriverService.stop();
         }
     }
