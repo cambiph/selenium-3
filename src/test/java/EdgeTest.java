@@ -20,9 +20,10 @@ public class EdgeTest {
 
     @Test
     public void edgeTest() {
-        driver.get("http://www.tweakers.net");
-        driver.findElement(By.linkText("Pricewatch")).click();
-        new WebDriverWait(driver, 15).until(ExpectedConditions.titleIs("Pricewatch - Vergelijk elektronicaprijzen"));
+        driver.get("https://www.ebay.com");
+        driver.findElement(By.id("gh-ac")).sendKeys("Batman");
+        driver.findElement(By.id("gh-btn")).click();
+        new WebDriverWait(driver, 10).until(ExpectedConditions.presenceOfElementLocated(By.id("Results")));
     }
 
     @After
