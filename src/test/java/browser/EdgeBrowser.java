@@ -49,7 +49,7 @@ public class EdgeBrowser implements Browser {
             startEdgeDriverService();
         }
         if (null == remoteWebDriver) {
-            remoteWebDriver = new RemoteWebDriver(edgeDriverService.getUrl(), DesiredCapabilities.chrome());
+            remoteWebDriver = new RemoteWebDriver(edgeDriverService.getUrl(), DesiredCapabilities.edge());
         }
     }
 
