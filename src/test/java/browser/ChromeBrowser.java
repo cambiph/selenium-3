@@ -13,9 +13,13 @@ public class ChromeBrowser implements Browser {
 
     private RemoteWebDriver remoteWebDriver;
     private ChromeDriverService chromeDriverService;
+    private ProxyManager proxyManager;
+    private DesiredCapabilities desiredCapabilities;
+
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public ChromeBrowser() {
+        proxyManager = new ProxyManager();
         setDriver();
     }
 
@@ -49,7 +53,7 @@ public class ChromeBrowser implements Browser {
             startChromeDriverService();
         }
         if (null == remoteWebDriver) {
-            remoteWebDriver = new RemoteWebDriver(chromeDriverService.getUrl(), DesiredCapabilities.chrome());
+            remoteWebDriver = new RemoteWebDriver(chromeDriverService.getUrl(), buildDesiredCapabilities());
         }
     }
 
@@ -67,5 +71,14 @@ public class ChromeBrowser implements Browser {
         if (null != chromeDriverService && chromeDriverService.isRunning()) {
             chromeDriverService.stop();
         }
+    }
+
+    private DesiredCapabilities buildDesiredCapabilities() {
+        desiredCapabilities = new DesiredCapabilities();
+        if(null != System.getProperty("browsermob")) {
+            desiredCapabilities = proxyManager.getDesiredCapabilities();
+        }
+        desiredCapabilities.setBrowserName("chrome");
+        return desiredCapabilities;
     }
 }

@@ -1,51 +1,53 @@
 package browser;
 
-import io.netty.handler.codec.http.*;
-import org.littleshoot.proxy.HttpFilters;
-import org.littleshoot.proxy.HttpFiltersAdapter;
-import org.littleshoot.proxy.HttpFiltersSource;
-import org.littleshoot.proxy.HttpFiltersSourceAdapter;
-import org.littleshoot.proxy.impl.DefaultHttpProxyServer;
+import net.lightbody.bmp.BrowserMobProxy;
+import net.lightbody.bmp.BrowserMobProxyServer;
+import net.lightbody.bmp.client.ClientUtil;
+import net.lightbody.bmp.core.har.Har;
+import net.lightbody.bmp.proxy.CaptureType;
+import org.openqa.selenium.Proxy;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.remote.CapabilityType;
+import org.openqa.selenium.remote.DesiredCapabilities;
 
 public class ProxyManager {
 
-    private static final int PORT = 8100;
+    private BrowserMobProxy browserMobProxy;
+    private Proxy seleniumProxy;
+    private DesiredCapabilities desiredCapabilities;
 
-    public ProxyManager() {
-        HttpFiltersSource filtersSource = getFiltersSource();
-
-        DefaultHttpProxyServer.bootstrap()
-                .withPort(PORT)
-                .withAllowLocalOnly(false)
-                .withFiltersSource(filtersSource)
-                .withName("BlockingFilterProxy")
-                .start();
+    private BrowserMobProxy startBrowserMobProxy() {
+        browserMobProxy.start();
+        return browserMobProxy;
     }
 
-    private static HttpFiltersSource getFiltersSource() {
-        return new HttpFiltersSourceAdapter() {
+    private Proxy createSeleniumProxy(BrowserMobProxy browserMobProxy) {
+        if(null == browserMobProxy) {
+            startBrowserMobProxy();
+        } else {
+            seleniumProxy = ClientUtil.createSeleniumProxy(browserMobProxy);
+        }
+        return seleniumProxy;
+    }
 
-            @Override
-            public HttpFilters filterRequest(HttpRequest originalRequest) {
+    private DesiredCapabilities setProxyCapability(DesiredCapabilities capabilities, Proxy seleniumProxy) {
+        if(null == capabilities) {
+            throw new RuntimeException("Capabilities have not been set yet!");
+        }
+        capabilities.setCapability(CapabilityType.PROXY, seleniumProxy);
+        return capabilities;
+    }
 
-                return new HttpFiltersAdapter(originalRequest) {
+    public ProxyManager() {
+        browserMobProxy = new BrowserMobProxyServer();
+        desiredCapabilities = new DesiredCapabilities();
+        startBrowserMobProxy();
+        seleniumProxy = createSeleniumProxy(browserMobProxy);
+        setProxyCapability(desiredCapabilities, seleniumProxy);
+    }
 
-                    @Override
-                    public HttpResponse clientToProxyRequest(HttpObject httpObject) {
-
-                        if (httpObject instanceof HttpRequest) {
-                            HttpRequest request = (HttpRequest) httpObject;
-
-                            System.out.println("Method URI : " + request.getMethod() + " " + request.getUri());
-
-                            if (request.getUri().endsWith("png") || request.getUri().endsWith("jpeg")) {
-                                return new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.NOT_FOUND);
-                            }
-                        }
-                        return null;
-                    }
-                };
-            }
-        };
+    public DesiredCapabilities getDesiredCapabilities() {
+        return desiredCapabilities;
     }
 }

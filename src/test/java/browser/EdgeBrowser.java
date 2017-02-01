@@ -13,9 +13,12 @@ public class EdgeBrowser implements Browser {
 
     private RemoteWebDriver remoteWebDriver;
     private EdgeDriverService edgeDriverService;
+    private ProxyManager proxyManager;
+    private DesiredCapabilities desiredCapabilities;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public EdgeBrowser() {
+        proxyManager = new ProxyManager();
         setDriver();
     }
 
@@ -49,7 +52,7 @@ public class EdgeBrowser implements Browser {
             startEdgeDriverService();
         }
         if (null == remoteWebDriver) {
-            remoteWebDriver = new RemoteWebDriver(edgeDriverService.getUrl(), DesiredCapabilities.edge());
+            remoteWebDriver = new RemoteWebDriver(edgeDriverService.getUrl(), buildDesiredCapabilities());
         }
     }
 
@@ -67,5 +70,14 @@ public class EdgeBrowser implements Browser {
         if (null != edgeDriverService && edgeDriverService.isRunning()) {
             edgeDriverService.stop();
         }
+    }
+
+    private DesiredCapabilities buildDesiredCapabilities() {
+        desiredCapabilities = new DesiredCapabilities();
+        if(null != System.getProperty("browsermob")) {
+            desiredCapabilities = proxyManager.getDesiredCapabilities();
+        }
+        desiredCapabilities.setBrowserName("edge");
+        return desiredCapabilities;
     }
 }
