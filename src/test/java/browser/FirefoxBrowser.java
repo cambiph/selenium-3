@@ -13,9 +13,12 @@ public class FirefoxBrowser implements Browser {
 
     private RemoteWebDriver remoteWebDriver;
     private GeckoDriverService geckoDriverService;
+    private ProxyManager proxyManager;
+    private DesiredCapabilities desiredCapabilities;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public FirefoxBrowser() {
+        proxyManager = new ProxyManager();
         setDriver();
     }
 
@@ -49,7 +52,7 @@ public class FirefoxBrowser implements Browser {
             startGeckoDriverService();
         }
         if (null == remoteWebDriver) {
-            remoteWebDriver = new RemoteWebDriver(geckoDriverService.getUrl(), DesiredCapabilities.firefox());
+            remoteWebDriver = new RemoteWebDriver(geckoDriverService.getUrl(), buildDesiredCapabilities());
         }
     }
 
@@ -67,5 +70,14 @@ public class FirefoxBrowser implements Browser {
         if (null != geckoDriverService && geckoDriverService.isRunning()) {
             geckoDriverService.stop();
         }
+    }
+
+    private DesiredCapabilities buildDesiredCapabilities() {
+        desiredCapabilities = new DesiredCapabilities();
+        if(null != System.getProperty("browsermob")) {
+            desiredCapabilities = proxyManager.getDesiredCapabilities();
+        }
+        desiredCapabilities.setBrowserName("firefox");
+        return desiredCapabilities;
     }
 }
