@@ -7,6 +7,7 @@ Volgende features zijn geïmplementeerd:
 - Chromedriver
 - Geckodriver
 - Slf4j-over-log4j support
+- Browsermob proxy
 
 Alle drivers maken gebruik van de gerelateerde services om het spawnen van nieuwe browserinstanties te versnellen.
 Er wordt zoveel mogelijk gebruik gemaakt van composition over inheritance om de onderhoudbaarheid te verhogen.
