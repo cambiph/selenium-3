@@ -13,5 +13,15 @@ Alle drivers maken gebruik van de gerelateerde services om het spawnen van nieuw
 Er wordt zoveel mogelijk gebruik gemaakt van composition over inheritance om de onderhoudbaarheid te verhogen.
 Volgende features moeten nog geïmplementeerd worden:
 
-- Images niet laden om testruns te versnellen (via proxy)
-- Headers toevoegen om authenticatie te bypassen (via extensie of proxy)
+### Browsermob
+
+De browsermob proxy wordt voor elke test gestart op localhost:8100. Deze onderschept alle calls die van de client naar de server worden gestuurd. Requests die images (*.png, *.jpg, *.jpeg) gaan opvragen worden onderschept en geven standaard een 200 terug. De request zal dan niet naar de server gestuurd worden wat kostbare tijd zal sparen.
+Deze functionaliteit staat standaard uit maar kan aangezet worden met de command-line switch *browsermob*:
+
+```sh
+mvn clean test -Dbrowsermob
+```
+
+### Todo
+- Command-line switch inbouwen om browser te kiezen
+- Headers toevoegen om authenticatie te bypassen (via proxy)
