@@ -14,9 +14,7 @@ public class ProxyManager {
     private DesiredCapabilities desiredCapabilities;
 
     private BrowserMobProxy startBrowserMobProxy() {
-        browserMobProxy.blacklistRequests("^http.*png$", 200);
-        browserMobProxy.blacklistRequests("^http.*jpg$", 200);
-        browserMobProxy.blacklistRequests("^http.*jpeg$", 200);
+        filterRequestsWithExtensions("png", "jpg", "jpeg", "gif");
         browserMobProxy.start();
         return browserMobProxy;
     }
@@ -50,12 +48,9 @@ public class ProxyManager {
         return desiredCapabilities;
     }
 
-    private void filterImages() {
-        browserMobProxy.addRequestFilter((response, contents, messageInfo) -> {
-            if (messageInfo.getOriginalUrl().endsWith("png")) {
-                contents.setTextContents("");
-            }
-            return null;
-        });
+    private void filterRequestsWithExtensions(String... extensions) {
+        for(String extension : extensions) {
+            browserMobProxy.blacklistRequests("^http.*" + extension + "$", 200);
+        }
     }
 }
