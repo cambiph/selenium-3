@@ -19,7 +19,7 @@ public class ChromeBrowser implements Browser {
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public ChromeBrowser() {
-        proxyManager = new ProxyManager();
+        proxyManager = new ProxyManager(true);
         setDriver();
     }
 
