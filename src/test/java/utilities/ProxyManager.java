@@ -1,4 +1,4 @@
-package browser;
+package utilities;
 
 import net.lightbody.bmp.BrowserMobProxy;
 import net.lightbody.bmp.BrowserMobProxyServer;
@@ -6,7 +6,6 @@ import net.lightbody.bmp.client.ClientUtil;
 import org.openqa.selenium.Proxy;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
-import utilities.PropertiesLoader;
 
 import java.net.InetSocketAddress;
 
@@ -26,6 +25,7 @@ public class ProxyManager {
             setCorporateProxy(browserMobProxy);
         }
 
+        addHeader(browserMobProxy,"vdabauthorization","cn=VDABCOR1,ou=USERS,ou=INTERN,o=VDAB");
         startBrowserMobProxy();
         seleniumProxy = createSeleniumProxy(browserMobProxy);
         setProxyCapability(desiredCapabilities, seleniumProxy);
@@ -68,5 +68,12 @@ public class ProxyManager {
         for (String extension : extensions) {
             browserMobProxy.blacklistRequests("^http.*" + extension + "$", 200);
         }
+    }
+
+    private void addHeader(BrowserMobProxy proxyInstance, String key, String value){
+        proxyInstance.addRequestFilter((request, contents, messageInfo) -> {
+            request.headers().set(key, value);
+            return null;
+        });
     }
 }

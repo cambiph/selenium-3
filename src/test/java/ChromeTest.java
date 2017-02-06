@@ -6,15 +6,22 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import utilities.SeleniumScreenRecorder;
+
+import java.awt.*;
+import java.io.IOException;
 
 public class ChromeTest {
 
     private RemoteWebDriver driver;
     private ChromeBrowser chromeBrowser;
+    private SeleniumScreenRecorder seleniumScreenRecorder;
 
     @Before
-    public void setup() {
+    public void setup() throws IOException, AWTException {
         chromeBrowser = new ChromeBrowser();
+        seleniumScreenRecorder = new SeleniumScreenRecorder();
+        seleniumScreenRecorder.startRecording();
         driver = chromeBrowser.getDriver();
     }
 
@@ -27,7 +34,8 @@ public class ChromeTest {
     }
 
     @After
-    public void teardown() {
+    public void teardown() throws IOException {
+        seleniumScreenRecorder.stopRecording();
         chromeBrowser.killDriver();
     }
 }
