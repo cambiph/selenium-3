@@ -9,7 +9,7 @@ import java.nio.charset.Charset;
 
 public class ChromeDriverVersionChecker  {
 
-    private final String URL = "http://chromedriver.storage.googleapis.com/LATEST_RELEASE";
+    private final String URL = "https://chromedriver.storage.googleapis.com/LATEST_RELEASE";
     private DownloadHandler downloadHandler;
 
     public ChromeDriverVersionChecker() throws IOException {
@@ -17,7 +17,7 @@ public class ChromeDriverVersionChecker  {
     }
 
     public String getVersion() throws IOException {
-        return IOUtils.toString(getContentFromResponse(), Charset.defaultCharset());
+        return IOUtils.toString(getContentFromResponse(), Charset.defaultCharset()).trim();
     }
 
     private InputStream getContentFromResponse() throws IOException {

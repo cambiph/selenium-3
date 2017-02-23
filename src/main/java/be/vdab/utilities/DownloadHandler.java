@@ -8,6 +8,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 public class DownloadHandler {
 
@@ -19,12 +20,17 @@ public class DownloadHandler {
     private HttpResponse response;
 
     public DownloadHandler(String url) throws IOException {
-        if (LOADER.isCorporateProxyEnabled()) {
-            setProxy();
+        if (null != url && !url.isEmpty()) {
+            if (LOADER.isCorporateProxyEnabled()) {
+                setProxy();
+            }
+            setClient();
+            setRequest(url);
+            executeRequest();
+
+        } else {
+            throw new RuntimeException("Target-url for downloadhandler is not set!");
         }
-        setClient();
-        setRequest(url);
-        executeRequest();
     }
 
     public HttpEntity getEntity() {
@@ -32,7 +38,7 @@ public class DownloadHandler {
     }
 
     private void setProxy() {
-        this.proxy = new HttpHost("vdabprdproxy.vdab.be", 8080, "http");
+        this.proxy = new HttpHost(LOADER.getCorporateProxyHost(), LOADER.getCorporateProxyPort(), "http");
     }
 
     private void setClient() {
@@ -49,15 +55,19 @@ public class DownloadHandler {
         }
     }
 
-    private void setRequest(String url) {
-        this.request = new HttpGet(url);
+    private void setRequest(String url) throws UnsupportedEncodingException {
+        if (null != url && !url.isEmpty()) {
+            this.request = new HttpGet(url);
+        } else {
+            throw new RuntimeException("URL is not set. Cannot continue to execute the request!");
+        }
     }
 
     private void executeRequest() throws IOException {
-        if(null != client && null != request) {
+        if (null != client && null != request) {
             this.response = client.execute(request);
         } else {
-            throw new RuntimeException("Client of Request is niet geinitialiseerd.");
+            throw new RuntimeException("Client or Request is not initialized!");
         }
     }
 
