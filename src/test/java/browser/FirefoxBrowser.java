@@ -18,7 +18,7 @@ public class FirefoxBrowser implements Browser {
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public FirefoxBrowser() {
-        proxyManager = new ProxyManager(true);
+        proxyManager = new ProxyManager();
         setDriver();
     }
 

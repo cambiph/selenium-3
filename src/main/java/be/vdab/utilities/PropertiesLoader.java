@@ -1,4 +1,4 @@
-package utilities;
+package be.vdab.utilities;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -22,12 +22,14 @@ public class PropertiesLoader {
 
     private void loadProperties() {
         properties = new Properties();
-        try (InputStream input = new FileInputStream("src/test/resources/application.properties")) {
+        try (InputStream input = new FileInputStream("src/main/resources/application.properties")) {
             properties.load(input);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
     }
+
+    public Boolean isCorporateProxyEnabled() { return Boolean.parseBoolean(properties.getProperty("corporate.proxy.enabled")); }
 
     public String getCorporateProxyHost() {
         return properties.getProperty("corporate.proxy.host");
@@ -40,4 +42,5 @@ public class PropertiesLoader {
     public String[] getBlacklistedExtensions() {
         return properties.getProperty("blacklisted.extensions").split(",");
     }
+
 }

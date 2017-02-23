@@ -1,5 +1,6 @@
 package utilities;
 
+import be.vdab.utilities.PropertiesLoader;
 import net.lightbody.bmp.BrowserMobProxy;
 import net.lightbody.bmp.BrowserMobProxyServer;
 import net.lightbody.bmp.client.ClientUtil;
@@ -16,12 +17,12 @@ public class ProxyManager {
     private DesiredCapabilities desiredCapabilities;
     private PropertiesLoader loader;
 
-    public ProxyManager(boolean setCorporateProxy) {
+    public ProxyManager() {
         browserMobProxy = new BrowserMobProxyServer();
         desiredCapabilities = new DesiredCapabilities();
         loader = PropertiesLoader.getInstance();
 
-        if (setCorporateProxy) {
+        if (loader.isCorporateProxyEnabled()) {
             setCorporateProxy(browserMobProxy);
         }
 

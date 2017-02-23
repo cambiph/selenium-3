@@ -18,7 +18,7 @@ public class EdgeBrowser implements Browser {
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public EdgeBrowser() {
-        proxyManager = new ProxyManager(true);
+        proxyManager = new ProxyManager();
         setDriver();
     }
 
