@@ -10,12 +10,14 @@ import java.net.URISyntaxException;
 
 public class ChromeDriverDownloader {
 
-    private final String  BASE_URL = "https://chromedriver.storage.googleapis.com/index.html?path=";
+    private final String BASE_URL = "https://chromedriver.storage.googleapis.com/";
+    private final String FILENAME = "chromedriver_win32.zip";
+    private final String SAVE_PATH = "src/test/resources/";
 
     public void downloadBinary() throws IOException, URISyntaxException {
-        DownloadHandler downloadHandler = new DownloadHandler(BASE_URL + new ChromeDriverVersionChecker().getVersion());
+        DownloadHandler downloadHandler = new DownloadHandler(BASE_URL + new ChromeDriverVersionChecker().getVersion() + "/" + FILENAME);
         InputStream content = downloadHandler.getEntity().getContent();
-        FileUtils.copyInputStreamToFile(content, new File("src/test/resources/chromedriver.zip"));
+        FileUtils.copyInputStreamToFile(content, new File(SAVE_PATH + FILENAME));
     }
 
 }
