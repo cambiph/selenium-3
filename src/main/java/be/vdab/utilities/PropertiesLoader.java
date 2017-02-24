@@ -43,4 +43,8 @@ public class PropertiesLoader {
         return properties.getProperty("blacklisted.extensions").split(",");
     }
 
+    public String getGeckoDriverReleaseUrl() { return properties.getProperty("geckodriver.release.url"); }
+
+    public String getChromeDriverReleaseUrl() { return properties.getProperty("chromedriver.release.url"); }
+
 }
