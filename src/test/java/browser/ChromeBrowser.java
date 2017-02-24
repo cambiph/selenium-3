@@ -1,5 +1,6 @@
 package browser;
 
+import be.vdab.chromedriver.ChromeDriverUpdater;
 import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -9,6 +10,7 @@ import utilities.ProxyManager;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 
 public class ChromeBrowser implements Browser {
 
@@ -18,8 +20,9 @@ public class ChromeBrowser implements Browser {
 
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
-    public ChromeBrowser() {
+    public ChromeBrowser() throws IOException, URISyntaxException {
         proxyManager = new ProxyManager();
+        new ChromeDriverUpdater().updateChromeDriverToLatest();
         setDriver();
     }
 

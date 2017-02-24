@@ -17,6 +17,10 @@ public class ChromeDriverDownloader {
     public void downloadBinary() throws IOException, URISyntaxException {
         DownloadHandler downloadHandler = new DownloadHandler(BASE_URL + new ChromeDriverVersionChecker().getVersion() + "/" + FILENAME);
         InputStream content = downloadHandler.getEntity().getContent();
+        File chromeDriverZip = new File(SAVE_PATH + FILENAME);
+        if(chromeDriverZip.exists()) {
+            FileUtils.forceDelete(chromeDriverZip);
+        }
         FileUtils.copyInputStreamToFile(content, new File(SAVE_PATH + FILENAME));
     }
 

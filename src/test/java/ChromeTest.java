@@ -10,6 +10,7 @@ import utilities.SeleniumScreenRecorder;
 
 import java.awt.*;
 import java.io.IOException;
+import java.net.URISyntaxException;
 
 public class ChromeTest {
 
@@ -18,7 +19,7 @@ public class ChromeTest {
     private SeleniumScreenRecorder seleniumScreenRecorder;
 
     @Before
-    public void setup() throws IOException, AWTException {
+    public void setup() throws IOException, AWTException, URISyntaxException {
         chromeBrowser = new ChromeBrowser();
         seleniumScreenRecorder = new SeleniumScreenRecorder();
         seleniumScreenRecorder.startRecording();
